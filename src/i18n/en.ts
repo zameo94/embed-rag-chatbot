@@ -1,0 +1,16 @@
+export const en = {
+  launcherLabel: "Open chat",
+  close: "Close",
+  title: "Assistant",
+  newConversation: "New conversation",
+  welcome: "Hi! How can I help you?",
+  placeholder: "Type a message…",
+  send: "Send",
+  searching: "Searching documents…",
+  sources: "Sources",
+  errorGeneric: "Something went wrong. Please try again.",
+  errorNetwork: "Connection interrupted. Please try again.",
+  errorRateLimited: "Too many messages, please wait a moment.",
+  errorStreamIncomplete: "The answer was interrupted. Please try again.",
+  errorUnavailable: "The service is currently unavailable.",
+} as const;
