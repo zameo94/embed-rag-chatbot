@@ -12,7 +12,7 @@ function setup(
   window.localStorage.clear();
   const visitor = new VisitorStore(window.localStorage, "pk_1");
   const fake = createFakeClient({ onStream });
-  const hook = renderHook(() => useChat(fake.client, visitor));
+  const hook = renderHook(() => useChat(fake.client, visitor, "it"));
   return { ...hook, visitor, fake };
 }
 
@@ -98,5 +98,77 @@ describe("useChat", () => {
     expect(result.current.messages).toHaveLength(0);
     expect(result.current.conversationId).toBeNull();
     expect(visitor.getConversationId()).toBeNull();
+  });
+
+  it("forwards the resolved locale", async () => {
+    const { result, fake } = setup((_request, handlers) => {
+      handlers.onDone?.({ provider: "p", model: "m", grounded: true });
+    });
+
+    await act(async () => {
+      await result.current.send("hi");
+    });
+
+    expect(fake.streamChat).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "hi", locale: "it" }),
+      expect.anything(),
+    );
+  });
+
+  it("ignores a concurrent send while one is in flight", async () => {
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const { result, fake } = setup(async (_request, handlers) => {
+      await gate;
+      handlers.onDone?.({ provider: "p", model: "m", grounded: true });
+    });
+
+    await act(async () => {
+      void result.current.send("one");
+    });
+    await act(async () => {
+      await result.current.send("two");
+    });
+
+    expect(fake.streamChat).toHaveBeenCalledTimes(1);
+    release();
+    await act(async () => {
+      await Promise.resolve();
+    });
+  });
+
+  it("does not resurrect the conversation when reset mid-stream", async () => {
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const { result, visitor } = setup(async (_request, handlers) => {
+      await gate;
+      handlers.onSources?.({
+        conversation_id: 42,
+        grounded: true,
+        sources: [],
+      });
+      handlers.onToken?.("late");
+      handlers.onDone?.({ provider: "p", model: "m", grounded: true });
+    });
+
+    await act(async () => {
+      void result.current.send("hi");
+    });
+    act(() => {
+      result.current.reset();
+    });
+    release();
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(result.current.messages).toHaveLength(0);
+    expect(result.current.conversationId).toBeNull();
+    expect(visitor.getConversationId()).toBeNull();
+    expect(result.current.status).toBe("idle");
   });
 });
