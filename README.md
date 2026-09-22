@@ -35,11 +35,14 @@ http://localhost:5173/?key=pk_...&api=http://localhost:8000
 
 ## Usage
 
+The customer pastes one `<script>` into their site. The API URL is baked into
+the bundle at build time (`VITE_WIDGET_API_URL`), so only the embed key is
+per-tenant:
+
 ```html
 <script
-  src="https://cdn.example.com/embed-rag-chatbot.js"
+  src="https://widget.example.com/embed-rag-chatbot.js"
   data-embed-key="pk_..."
-  data-api-url="https://api.example.com"
   defer
 ></script>
 ```
@@ -49,7 +52,7 @@ http://localhost:5173/?key=pk_...&api=http://localhost:8000
 | Attribute            | Required | Description                                                     |
 | -------------------- | -------- | --------------------------------------------------------------- |
 | `data-embed-key`     | yes      | Publishable tenant embed key (`X-Embed-Key`).                   |
-| `data-api-url`       | yes      | Base URL of the jac-rag API.                                    |
+| `data-api-url`       | no       | Overrides the baked API URL (rarely needed).                    |
 | `data-locale`        | no       | Force UI language (`it` / `en`); else browser, then tenant.     |
 | `data-title`         | no       | Panel title; defaults to the tenant name from `/widget/config`. |
 | `data-welcome`       | no       | Welcome message shown before the first turn.                    |
@@ -57,9 +60,24 @@ http://localhost:5173/?key=pk_...&api=http://localhost:8000
 | `data-position`      | no       | `bottom-right` (default) or `bottom-left`.                      |
 | `data-auto-open`     | no       | `"true"` to open the panel on load.                             |
 
+## Hosting
+
+`dist/embed-rag-chatbot.js` is a static file: it only needs to be served over
+HTTP. The included `Dockerfile` builds it and serves it with nginx.
+
+```sh
+cp .env.example .env      # set VITE_WIDGET_API_URL to the public API base URL
+docker compose up --build # serves http://localhost:8080/embed-rag-chatbot.js
+```
+
+`VITE_WIDGET_API_URL` is **required** for this image (the build fails without it)
+because it is the address the widget must call from the customer's browser: it
+has to be the public API URL, not an internal Docker service name.
+
 ## Roadmap
 
 - **P0** scaffold (toolchain, CI, smoke test) — done
 - **P1** API client + SSE parser + visitor state — done
 - **P2** Shadow DOM UI, i18n (IT/EN), theming — done
 - **P3** demo page, size budget, e2e — done
+- **P4** static hosting (nginx image + baked API URL) — done
