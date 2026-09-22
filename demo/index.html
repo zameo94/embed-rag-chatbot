@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>embed-rag-chatbot — demo</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 640px;
+        margin: 40px auto;
+        padding: 0 16px;
+        color: #0f172a;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+      #missing {
+        border: 1px solid #fcd34d;
+        background: #fffbeb;
+        border-radius: 8px;
+        padding: 12px 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>embed-rag-chatbot</h1>
+    <p>Demo server hosting <code>embed-rag-chatbot.js</code>.</p>
+
+    <p id="missing" hidden>
+      No embed key configured. Set <code>WIDGET_EMBED_KEY</code> in the
+      <code>embed-rag-chatbot</code> <code>.env</code> file and rebuild.
+    </p>
+
+    <script>
+      window.__ERC_EMBED_KEY__ = "__EMBED_KEY__";
+    </script>
+    <script src="/embed-rag-chatbot.js"></script>
+    <script>
+      const key = (window.__ERC_EMBED_KEY__ || "").trim();
+      if (key) {
+        const widget = document.createElement("embed-rag-chatbot");
+        widget.dataset.embedKey = key;
+        document.body.append(widget);
+      } else {
+        document.querySelector("#missing").hidden = false;
+      }
+    </script>
+  </body>
+</html>

@@ -66,9 +66,13 @@ per-tenant:
 HTTP. The included `Dockerfile` builds it and serves it with nginx.
 
 ```sh
-cp .env.example .env      # set VITE_WIDGET_API_URL to the public API base URL
+cp .env.example .env      # set VITE_WIDGET_API_URL (and optionally WIDGET_EMBED_KEY)
 docker compose up --build # serves http://localhost:8080/embed-rag-chatbot.js
 ```
+
+The root `http://localhost:8080/` is a small demo page. Set `WIDGET_EMBED_KEY`
+(an embed key from the jac-rag CMS) and rebuild: the widget mounts on load. If the
+key is unset, the page just shows a hint.
 
 `VITE_WIDGET_API_URL` is **required** for this image (the build fails without it)
 because it is the address the widget must call from the customer's browser: it

@@ -10,5 +10,8 @@ RUN test -n "$VITE_WIDGET_API_URL" \
 RUN npm run build
 
 FROM nginx:1.27-alpine AS serve
+ARG WIDGET_EMBED_KEY=""
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/demo/index.html /usr/share/nginx/html/index.html
+RUN sed -i "s|__EMBED_KEY__|${WIDGET_EMBED_KEY}|g" /usr/share/nginx/html/index.html
 EXPOSE 80
