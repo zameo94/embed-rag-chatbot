@@ -1,0 +1,8 @@
+services:
+  widget:
+    build:
+      context: .
+      args:
+        VITE_WIDGET_API_URL: ${VITE_WIDGET_API_URL:?set VITE_WIDGET_API_URL in .env (public API URL the widget calls)}
+    ports:
+      - "${WIDGET_PORT:-8080}:80"
