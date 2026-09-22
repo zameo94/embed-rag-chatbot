@@ -36,6 +36,6 @@ npm run lint
 ## Roadmap
 
 - **P0** scaffold (toolchain, CI, smoke test) — done
-- **P1** API client + SSE parser + visitor state
+- **P1** API client + SSE parser + visitor state — done
 - **P2** Shadow DOM UI, i18n (IT/EN), theming
 - **P3** demo page, size budget, e2e
