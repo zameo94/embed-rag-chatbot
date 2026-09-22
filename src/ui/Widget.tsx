@@ -39,7 +39,7 @@ export function Widget({ client, visitor, options }: WidgetProps) {
     [options.locale, config?.default_locale],
   );
   const t = useMemo(() => createTranslator(locale), [locale]);
-  const chat = useChat(client, visitor);
+  const chat = useChat(client, visitor, locale);
   const title = options.title ?? config?.tenant_name ?? t("title");
   const welcome = options.welcome ?? t("welcome");
 

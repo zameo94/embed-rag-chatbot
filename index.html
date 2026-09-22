@@ -1,16 +1,100 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>embed-rag-chatbot — dev</title>
+    <title>embed-rag-chatbot — demo</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 720px;
+        margin: 40px auto;
+        padding: 0 16px;
+        color: #0f172a;
+      }
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        font-size: 13px;
+        gap: 4px;
+      }
+      input {
+        padding: 8px 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font: inherit;
+        min-width: 240px;
+      }
+      button {
+        align-self: flex-end;
+        padding: 9px 16px;
+        border: none;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #fff;
+        font: inherit;
+        cursor: pointer;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+    </style>
   </head>
   <body>
     <h1>embed-rag-chatbot</h1>
-    <embed-rag-chatbot
-      data-embed-key="pk_dev"
-      data-api-url="http://localhost:8000"
-    ></embed-rag-chatbot>
-    <script type="module" src="/src/index.tsx"></script>
+    <p>
+      Demo locale. Avvia il backend jac-rag, crea una embed key dal CMS e incollala qui
+      sotto (oppure usa i parametri <code>?key=</code> e <code>?api=</code>).
+    </p>
+
+    <form id="config">
+      <label>
+        Embed key
+        <input id="key" name="key" placeholder="pk_..." autocomplete="off" />
+      </label>
+      <label>
+        API URL
+        <input id="api" name="api" placeholder="http://localhost:8000" />
+      </label>
+      <button id="start" type="submit">Avvia widget</button>
+    </form>
+
+    <script type="module">
+      import "/src/index.tsx";
+
+      const params = new URLSearchParams(location.search);
+      const form = document.querySelector("#config");
+      const keyInput = document.querySelector("#key");
+      const apiInput = document.querySelector("#api");
+
+      keyInput.value = params.get("key") ?? "pk_dev";
+      apiInput.value = params.get("api") ?? "http://localhost:8000";
+
+      function mount() {
+        document.querySelector("#widget")?.remove();
+        if (!keyInput.value.trim() || !apiInput.value.trim()) return;
+        const widget = document.createElement("embed-rag-chatbot");
+        widget.id = "widget";
+        widget.dataset.embedKey = keyInput.value.trim();
+        widget.dataset.apiUrl = apiInput.value.trim();
+        widget.dataset.locale = "it";
+        document.body.append(widget);
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        mount();
+      });
+
+      if (params.has("key") || params.has("api")) mount();
+    </script>
   </body>
 </html>
