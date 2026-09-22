@@ -1,4 +1,10 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { isConfigured, parseOptions } from "./config";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 function element(attributes: Record<string, string> = {}): HTMLElement {
   const node = document.createElement("div");
@@ -53,5 +59,22 @@ describe("parseOptions", () => {
     );
     expect(isConfigured(parseOptions(element({ embedKey: "k" })))).toBe(false);
     expect(isConfigured(parseOptions(element()))).toBe(false);
+  });
+
+  it("falls back to the baked api url when data-api-url is absent", () => {
+    vi.stubEnv("VITE_WIDGET_API_URL", " https://api.baked.example ");
+
+    const options = parseOptions(element({ embedKey: "k" }));
+
+    expect(options.apiUrl).toBe("https://api.baked.example");
+    expect(isConfigured(options)).toBe(true);
+  });
+
+  it("prefers data-api-url over the baked api url", () => {
+    vi.stubEnv("VITE_WIDGET_API_URL", "https://api.baked.example");
+
+    const options = parseOptions(element({ embedKey: "k", apiUrl: "https://api.attr" }));
+
+    expect(options.apiUrl).toBe("https://api.attr");
   });
 });

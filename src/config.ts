@@ -20,11 +20,15 @@ function optional(value: string | undefined): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
+function defaultApiUrl(): string {
+  return import.meta.env.VITE_WIDGET_API_URL?.trim() ?? "";
+}
+
 export function parseOptions(element: HTMLElement): WidgetOptions {
   const data = element.dataset;
   return {
     embedKey: data.embedKey?.trim() ?? "",
-    apiUrl: data.apiUrl?.trim() ?? "",
+    apiUrl: data.apiUrl?.trim() || defaultApiUrl(),
     locale: optional(data.locale),
     title: optional(data.title),
     welcome: optional(data.welcome),
