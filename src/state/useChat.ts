@@ -24,13 +24,19 @@ export interface UseChat {
   reset: () => void;
 }
 
-export function useChat(client: WidgetClient, visitor: VisitorStore): UseChat {
+export function useChat(
+  client: WidgetClient,
+  visitor: VisitorStore,
+  locale?: string,
+): UseChat {
   const [messages, setMessages] = useState<ChatEntry[]>([]);
   const [status, setStatus] = useState<ChatStatus>("idle");
   const [conversationId, setConversationId] = useState<number | null>(
     visitor.getConversationId(),
   );
   const sequence = useRef(0);
+  const generation = useRef(0);
+  const busy = useRef(false);
 
   const nextId = useCallback((): string => {
     sequence.current += 1;
@@ -49,7 +55,11 @@ export function useChat(client: WidgetClient, visitor: VisitorStore): UseChat {
   const send = useCallback(
     async (text: string): Promise<void> => {
       const trimmed = text.trim();
-      if (trimmed === "" || status !== "idle") return;
+      if (trimmed === "" || busy.current) return;
+
+      busy.current = true;
+      const run = ++generation.current;
+      const isCurrent = (): boolean => generation.current === run;
 
       setMessages((previous) => [
         ...previous,
@@ -74,21 +84,25 @@ export function useChat(client: WidgetClient, visitor: VisitorStore): UseChat {
 
       try {
         await client.streamChat(
-          { message: trimmed, conversation_id: conversationId },
+          { message: trimmed, conversation_id: conversationId, locale },
           {
             onSources: (payload) => {
+              if (!isCurrent()) return;
               setConversationId(payload.conversation_id);
               visitor.setConversationId(payload.conversation_id);
               updateLast((entry) => ({ ...entry, sources: payload.sources }));
             },
             onToken: (token) => {
+              if (!isCurrent()) return;
               setStatus("streaming");
               updateLast((entry) => ({ ...entry, content: entry.content + token }));
             },
             onDone: () => {
+              if (!isCurrent()) return;
               updateLast((entry) => ({ ...entry, pending: false }));
             },
             onError: (payload) => {
+              if (!isCurrent()) return;
               updateLast((entry) => ({
                 ...entry,
                 pending: false,
@@ -98,16 +112,23 @@ export function useChat(client: WidgetClient, visitor: VisitorStore): UseChat {
           },
         );
       } catch (error) {
-        const code = error instanceof ApiError ? error.code : "NETWORK_ERROR";
-        updateLast((entry) => ({ ...entry, pending: false, error: code }));
+        if (isCurrent()) {
+          const code = error instanceof ApiError ? error.code : "NETWORK_ERROR";
+          updateLast((entry) => ({ ...entry, pending: false, error: code }));
+        }
       } finally {
-        setStatus("idle");
+        if (isCurrent()) {
+          busy.current = false;
+          setStatus("idle");
+        }
       }
     },
-    [client, conversationId, nextId, status, updateLast, visitor],
+    [client, conversationId, locale, nextId, updateLast, visitor],
   );
 
   const reset = useCallback((): void => {
+    generation.current += 1;
+    busy.current = false;
     setMessages([]);
     setConversationId(null);
     visitor.clearConversationId();

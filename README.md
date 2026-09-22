@@ -17,9 +17,20 @@ talks directly to the tenant's widget API with a publishable embed key.
 npm install
 npm run dev        # dev page at http://localhost:5173
 npm run build      # dist/embed-rag-chatbot.js
-npm run test       # vitest
+npm run test       # vitest (unit/component)
+npm run test:e2e   # playwright (chromium, API mocked)
 npm run typecheck
 npm run lint
+```
+
+### Demo
+
+`npm run dev` serves a demo page (`index.html`): paste an embed key created in the
+jac-rag CMS and the API URL, then click **Avvia widget**. You can also prefill them
+via query string:
+
+```
+http://localhost:5173/?key=pk_...&api=http://localhost:8000
 ```
 
 ## Usage
@@ -51,4 +62,4 @@ npm run lint
 - **P0** scaffold (toolchain, CI, smoke test) — done
 - **P1** API client + SSE parser + visitor state — done
 - **P2** Shadow DOM UI, i18n (IT/EN), theming — done
-- **P3** demo page, size budget, e2e
+- **P3** demo page, size budget, e2e — done
