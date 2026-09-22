@@ -22,7 +22,7 @@ npm run typecheck
 npm run lint
 ```
 
-## Usage (planned)
+## Usage
 
 ```html
 <script
@@ -33,9 +33,22 @@ npm run lint
 ></script>
 ```
 
+### Data attributes
+
+| Attribute            | Required | Description                                                     |
+| -------------------- | -------- | --------------------------------------------------------------- |
+| `data-embed-key`     | yes      | Publishable tenant embed key (`X-Embed-Key`).                   |
+| `data-api-url`       | yes      | Base URL of the jac-rag API.                                    |
+| `data-locale`        | no       | Force UI language (`it` / `en`); else browser, then tenant.     |
+| `data-title`         | no       | Panel title; defaults to the tenant name from `/widget/config`. |
+| `data-welcome`       | no       | Welcome message shown before the first turn.                    |
+| `data-primary-color` | no       | Accent color (CSS variable `--erc-primary`).                    |
+| `data-position`      | no       | `bottom-right` (default) or `bottom-left`.                      |
+| `data-auto-open`     | no       | `"true"` to open the panel on load.                             |
+
 ## Roadmap
 
 - **P0** scaffold (toolchain, CI, smoke test) — done
 - **P1** API client + SSE parser + visitor state — done
-- **P2** Shadow DOM UI, i18n (IT/EN), theming
+- **P2** Shadow DOM UI, i18n (IT/EN), theming — done
 - **P3** demo page, size budget, e2e

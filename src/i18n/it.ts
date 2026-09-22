@@ -1,0 +1,16 @@
+export const it = {
+  launcherLabel: "Apri la chat",
+  close: "Chiudi",
+  title: "Assistente",
+  newConversation: "Nuova conversazione",
+  welcome: "Ciao! Come posso aiutarti?",
+  placeholder: "Scrivi un messaggio…",
+  send: "Invia",
+  searching: "Ricerca nei documenti…",
+  sources: "Fonti",
+  errorGeneric: "Si è verificato un errore. Riprova.",
+  errorNetwork: "Connessione interrotta. Riprova.",
+  errorRateLimited: "Troppi messaggi, attendi un momento.",
+  errorStreamIncomplete: "La risposta è stata interrotta. Riprova.",
+  errorUnavailable: "Il servizio non è disponibile al momento.",
+} as const;
