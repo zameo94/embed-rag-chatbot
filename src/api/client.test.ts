@@ -37,7 +37,7 @@ function header(init: RequestInit, name: string): string | null {
 }
 
 function session(visitorToken = "v1"): Response {
-  return jsonResponse({ visitor_token: visitorToken, expires_in: 3600, tenant_id: 7 });
+  return jsonResponse({ visitor_token: visitorToken, expires_in: 3600, workspace_id: 7 });
 }
 
 function setup(handler: Handler) {
@@ -59,12 +59,16 @@ beforeEach(() => {
 describe("createWidgetClient", () => {
   it("loads the config with the embed key", async () => {
     const { client, mock } = setup(() =>
-      jsonResponse({ tenant_name: "Acme", default_locale: "it", answer_mode: "strict" }),
+      jsonResponse({
+        workspace_name: "Acme",
+        default_locale: "it",
+        answer_mode: "strict",
+      }),
     );
 
     const config = await client.getConfig();
 
-    expect(config.tenant_name).toBe("Acme");
+    expect(config.workspace_name).toBe("Acme");
     expect(mock.calls[0].url).toBe("https://api.example.com/api/v1/widget/config");
     expect(header(mock.calls[0].init, "X-Embed-Key")).toBe("pk_1");
   });
@@ -232,7 +236,7 @@ describe("createWidgetClient", () => {
     const { client, store, mock } = setup(() =>
       jsonResponse({
         id: 3,
-        tenant_id: 7,
+        workspace_id: 7,
         user_id: null,
         end_user_id: "x",
         title: null,

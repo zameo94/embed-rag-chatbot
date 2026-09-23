@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 import type { WidgetClient } from "../api/client";
 import type { WidgetConfig } from "../api/types";
@@ -19,29 +19,35 @@ export function Widget({ client, visitor, options }: WidgetProps) {
   const [config, setConfig] = useState<WidgetConfig | null>(null);
   const [open, setOpen] = useState(options.autoOpen);
 
-  useEffect(() => {
-    let active = true;
-    client
-      .getConfig()
-      .then((loaded) => {
-        if (active) setConfig(loaded);
-      })
-      .catch(() => {
-        // config is optional: fall back to local defaults
-      });
-    return () => {
-      active = false;
-    };
+  const loadConfig = useCallback(async () => {
+    try {
+      setConfig(await client.getConfig());
+    } catch {
+      // config is optional: fall back to local defaults
+    }
   }, [client]);
 
+  useEffect(() => {
+    void loadConfig();
+  }, [loadConfig]);
+
+  useEffect(() => {
+    if (open) void loadConfig();
+  }, [open, loadConfig]);
+
   const locale: Locale = useMemo(
-    () => resolveLocale([options.locale, navigator.language, config?.default_locale]),
+    () => resolveLocale([options.locale, config?.default_locale]),
     [options.locale, config?.default_locale],
   );
   const t = useMemo(() => createTranslator(locale), [locale]);
   const chat = useChat(client, visitor, locale);
-  const title = options.title ?? config?.tenant_name ?? t("title");
+  const title = options.title ?? config?.workspace_name ?? t("title");
   const welcome = options.welcome ?? t("welcome");
+
+  function startNewConversation() {
+    chat.reset();
+    void loadConfig();
+  }
 
   return (
     <div class={`erc-root erc-root--${options.position}`}>
@@ -51,6 +57,7 @@ export function Widget({ client, visitor, options }: WidgetProps) {
           welcome={welcome}
           t={t}
           chat={chat}
+          onNewConversation={startNewConversation}
           onClose={() => setOpen(false)}
         />
       ) : null}
