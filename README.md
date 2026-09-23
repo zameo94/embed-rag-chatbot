@@ -49,16 +49,16 @@ per-workspace:
 
 ### Data attributes
 
-| Attribute            | Required | Description                                                        |
-| -------------------- | -------- | ------------------------------------------------------------------ |
-| `data-embed-key`     | yes      | Publishable workspace embed key (`X-Embed-Key`).                   |
-| `data-api-url`       | no       | Overrides the baked API URL (rarely needed).                       |
-| `data-locale`        | no       | Force UI language (`it` / `en`); else browser, then workspace.     |
-| `data-title`         | no       | Panel title; defaults to the workspace name from `/widget/config`. |
-| `data-welcome`       | no       | Welcome message shown before the first turn.                       |
-| `data-primary-color` | no       | Accent color (CSS variable `--erc-primary`).                       |
-| `data-position`      | no       | `bottom-right` (default) or `bottom-left`.                         |
-| `data-auto-open`     | no       | `"true"` to open the panel on load.                                |
+| Attribute            | Required | Description                                                            |
+| -------------------- | -------- | ---------------------------------------------------------------------- |
+| `data-embed-key`     | yes      | Publishable workspace embed key (`X-Embed-Key`).                       |
+| `data-api-url`       | no       | Overrides the baked API URL (rarely needed).                           |
+| `data-locale`        | no       | UI language (`it` / `en`); else the workspace language (default `en`). |
+| `data-title`         | no       | Panel title; defaults to the workspace name from `/widget/config`.     |
+| `data-welcome`       | no       | Welcome message shown before the first turn.                           |
+| `data-primary-color` | no       | Accent color (CSS variable `--erc-primary`).                           |
+| `data-position`      | no       | `bottom-right` (default) or `bottom-left`.                             |
+| `data-auto-open`     | no       | `"true"` to open the panel on load.                                    |
 
 ## Hosting
 

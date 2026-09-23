@@ -16,10 +16,11 @@ describe("i18n", () => {
     expect(normalizeLocale("")).toBeNull();
   });
 
-  it("resolves the first supported candidate, falling back to italian", () => {
+  it("resolves the first supported candidate, falling back to english", () => {
     expect(resolveLocale([undefined, "en-GB", "it"])).toBe("en");
-    expect(resolveLocale(["fr", "de"])).toBe("it");
-    expect(resolveLocale([])).toBe("it");
+    expect(resolveLocale(["it", "en"])).toBe("it");
+    expect(resolveLocale(["fr", "de"])).toBe("en");
+    expect(resolveLocale([])).toBe("en");
   });
 
   it("translates and builds a translator", () => {

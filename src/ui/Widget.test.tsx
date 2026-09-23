@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/preact";
+import { fireEvent, render, screen, waitFor } from "@testing-library/preact";
 
 import type { ChatStreamHandlers } from "../api/sse";
 import type { WidgetOptions } from "../config";
@@ -27,6 +27,31 @@ function setup(
 }
 
 describe("Widget", () => {
+  it("uses the workspace locale", async () => {
+    window.localStorage.clear();
+    const visitor = new VisitorStore(window.localStorage, "pk_1");
+    const fake = createFakeClient({
+      config: {
+        workspace_name: "Acme",
+        default_locale: "en",
+        answer_mode: "strict",
+        is_active: true,
+      },
+    });
+
+    render(
+      <Widget
+        client={fake.client}
+        visitor={visitor}
+        options={{ ...options, locale: undefined }}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Open chat" })).toBeInTheDocument(),
+    );
+  });
+
   it("opens the panel from the launcher", () => {
     const { getByRole, queryByRole } = setup();
 

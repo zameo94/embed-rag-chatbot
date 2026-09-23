@@ -13,6 +13,7 @@ export const DEFAULT_CONFIG: WidgetConfig = {
   workspace_name: "Acme",
   default_locale: "it",
   answer_mode: "strict",
+  is_active: true,
 };
 
 export function createFakeClient(options: FakeClientOptions = {}) {

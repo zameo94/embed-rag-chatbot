@@ -4,6 +4,7 @@ export interface WidgetConfig {
   workspace_name: string;
   default_locale: string;
   answer_mode: AnswerMode;
+  is_active: boolean;
 }
 
 export interface WidgetSession {

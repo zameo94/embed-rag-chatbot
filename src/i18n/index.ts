@@ -28,7 +28,7 @@ export function resolveLocale(candidates: (string | null | undefined)[]): Locale
     const locale = normalizeLocale(candidate);
     if (locale) return locale;
   }
-  return "it";
+  return "en";
 }
 
 export function translate(locale: Locale, key: MessageKey): string {
