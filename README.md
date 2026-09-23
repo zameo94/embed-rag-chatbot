@@ -1,8 +1,8 @@
 # embed-rag-chatbot
 
-Embeddable chat widget for [jac-rag](../jac-rag) tenants. A single static
+Embeddable chat widget for [jac-rag](../jac-rag) workspaces. A single static
 bundle (Preact + Shadow DOM) that a customer pastes into their site and that
-talks directly to the tenant's widget API with a publishable embed key.
+talks directly to the workspace's widget API with a publishable embed key.
 
 ## Stack
 
@@ -37,7 +37,7 @@ http://localhost:5173/?key=pk_...&api=http://localhost:8000
 
 The customer pastes one `<script>` into their site. The API URL is baked into
 the bundle at build time (`VITE_WIDGET_API_URL`), so only the embed key is
-per-tenant:
+per-workspace:
 
 ```html
 <script
@@ -49,16 +49,16 @@ per-tenant:
 
 ### Data attributes
 
-| Attribute            | Required | Description                                                     |
-| -------------------- | -------- | --------------------------------------------------------------- |
-| `data-embed-key`     | yes      | Publishable tenant embed key (`X-Embed-Key`).                   |
-| `data-api-url`       | no       | Overrides the baked API URL (rarely needed).                    |
-| `data-locale`        | no       | Force UI language (`it` / `en`); else browser, then tenant.     |
-| `data-title`         | no       | Panel title; defaults to the tenant name from `/widget/config`. |
-| `data-welcome`       | no       | Welcome message shown before the first turn.                    |
-| `data-primary-color` | no       | Accent color (CSS variable `--erc-primary`).                    |
-| `data-position`      | no       | `bottom-right` (default) or `bottom-left`.                      |
-| `data-auto-open`     | no       | `"true"` to open the panel on load.                             |
+| Attribute            | Required | Description                                                            |
+| -------------------- | -------- | ---------------------------------------------------------------------- |
+| `data-embed-key`     | yes      | Publishable workspace embed key (`X-Embed-Key`).                       |
+| `data-api-url`       | no       | Overrides the baked API URL (rarely needed).                           |
+| `data-locale`        | no       | UI language (`it` / `en`); else the workspace language (default `en`). |
+| `data-title`         | no       | Panel title; defaults to the workspace name from `/widget/config`.     |
+| `data-welcome`       | no       | Welcome message shown before the first turn.                           |
+| `data-primary-color` | no       | Accent color (CSS variable `--erc-primary`).                           |
+| `data-position`      | no       | `bottom-right` (default) or `bottom-left`.                             |
+| `data-auto-open`     | no       | `"true"` to open the panel on load.                                    |
 
 ## Hosting
 
@@ -66,9 +66,13 @@ per-tenant:
 HTTP. The included `Dockerfile` builds it and serves it with nginx.
 
 ```sh
-cp .env.example .env      # set VITE_WIDGET_API_URL to the public API base URL
+cp .env.example .env      # set VITE_WIDGET_API_URL (and optionally WIDGET_EMBED_KEY)
 docker compose up --build # serves http://localhost:8080/embed-rag-chatbot.js
 ```
+
+The root `http://localhost:8080/` is a small demo page. Set `WIDGET_EMBED_KEY`
+(an embed key from the jac-rag CMS) and rebuild: the widget mounts on load. If the
+key is unset, the page just shows a hint.
 
 `VITE_WIDGET_API_URL` is **required** for this image (the build fails without it)
 because it is the address the widget must call from the customer's browser: it

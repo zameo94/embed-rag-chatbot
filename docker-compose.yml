@@ -4,5 +4,6 @@ services:
       context: .
       args:
         VITE_WIDGET_API_URL: ${VITE_WIDGET_API_URL:?set VITE_WIDGET_API_URL in .env (public API URL the widget calls)}
+        WIDGET_EMBED_KEY: ${WIDGET_EMBED_KEY:-}
     ports:
       - "${WIDGET_PORT:-8080}:80"

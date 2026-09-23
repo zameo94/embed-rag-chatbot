@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Embeddable RAG chat widget for jac-rag tenants.",
+  "description": "Embeddable RAG chat widget for jac-rag workspaces.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

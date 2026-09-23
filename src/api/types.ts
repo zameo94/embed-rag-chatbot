@@ -1,15 +1,16 @@
 export type AnswerMode = "strict" | "assistive";
 
 export interface WidgetConfig {
-  tenant_name: string;
+  workspace_name: string;
   default_locale: string;
   answer_mode: AnswerMode;
+  is_active: boolean;
 }
 
 export interface WidgetSession {
   visitor_token: string;
   expires_in: number;
-  tenant_id: number;
+  workspace_id: number;
 }
 
 export interface ChatSource {
@@ -51,7 +52,7 @@ export interface ChatMessage {
 
 export interface Conversation {
   id: number;
-  tenant_id: number;
+  workspace_id: number;
   user_id: number | null;
   end_user_id: string | null;
   title: string | null;
