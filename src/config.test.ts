@@ -54,6 +54,8 @@ describe("parseOptions", () => {
   });
 
   it("detects whether the widget is configured", () => {
+    vi.stubEnv("VITE_WIDGET_API_URL", "");
+
     expect(isConfigured(parseOptions(element({ embedKey: "k", apiUrl: "u" })))).toBe(
       true,
     );

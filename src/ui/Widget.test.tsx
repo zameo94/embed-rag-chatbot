@@ -36,7 +36,7 @@ describe("Widget", () => {
     expect(getByRole("dialog")).not.toBeNull();
   });
 
-  it("shows the tenant name as title once the config loads", async () => {
+  it("shows the workspace name as title once the config loads", async () => {
     const { getByRole } = setup();
 
     fireEvent.click(getByRole("button", { name: "Apri la chat" }));

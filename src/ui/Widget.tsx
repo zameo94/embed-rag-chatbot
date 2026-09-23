@@ -40,7 +40,7 @@ export function Widget({ client, visitor, options }: WidgetProps) {
   );
   const t = useMemo(() => createTranslator(locale), [locale]);
   const chat = useChat(client, visitor, locale);
-  const title = options.title ?? config?.tenant_name ?? t("title");
+  const title = options.title ?? config?.workspace_name ?? t("title");
   const welcome = options.welcome ?? t("welcome");
 
   return (

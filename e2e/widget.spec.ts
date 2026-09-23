@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const ORIGIN = "http://localhost:5173";
-const CONFIG = { tenant_name: "Acme", default_locale: "it", answer_mode: "strict" };
+const CONFIG = { workspace_name: "Acme", default_locale: "it", answer_mode: "strict" };
 
 type SseEvent = [name: string, data: unknown];
 
@@ -19,7 +19,7 @@ async function mockWidgetApi(page: Page, streamBody: string): Promise<void> {
     }
     if (path.endsWith("/session")) {
       return route.fulfill({
-        json: { visitor_token: "visitor", expires_in: 3600, tenant_id: 7 },
+        json: { visitor_token: "visitor", expires_in: 3600, workspace_id: 7 },
       });
     }
     if (path.endsWith("/chat/stream")) {
@@ -47,7 +47,7 @@ async function ask(page: Page, text: string): Promise<void> {
   await input.press("Enter");
 }
 
-test("opens the panel showing the tenant name", async ({ page }) => {
+test("opens the panel showing the workspace name", async ({ page }) => {
   await mockWidgetApi(page, sse([]));
 
   await openPanel(page);
