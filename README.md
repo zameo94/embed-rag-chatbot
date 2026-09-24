@@ -23,6 +23,7 @@ control.
 - [Development](#development)
 - [Tests](#tests)
 - [Limitations](#limitations)
+- [License](#license)
 
 ---
 
@@ -194,3 +195,9 @@ lint, format check, typecheck, unit tests, e2e and the build.
 - The API URL is fixed at build time (per deployment), not per embed.
 - Conversations history is read-only in the widget (no delete).
 - The widget is anonymous: identity is the visitor token, not a logged-in user.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE).
