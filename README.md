@@ -141,11 +141,11 @@ Serve the same file from any static host (CDN, S3, nginx); no runtime is needed.
 
 The `.env` (copied from `.env.example`):
 
-| Variable               | Required | Description                                                                 |
-| ---------------------- | -------- | --------------------------------------------------------------------------- |
-| `VITE_WIDGET_API_URL`  | yes      | Public API base URL the widget calls. Baked into the bundle at build time.  |
-| `WIDGET_EMBED_KEY`     | no       | Embed key used by the demo page at `/`. If unset, the page shows a hint.    |
-| `WIDGET_PORT`          | no       | Host port for the demo nginx server (default `8080`).                       |
+| Variable              | Required | Description                                                                |
+| --------------------- | -------- | -------------------------------------------------------------------------- |
+| `VITE_WIDGET_API_URL` | yes      | Public API base URL the widget calls. Baked into the bundle at build time. |
+| `WIDGET_EMBED_KEY`    | no       | Embed key used by the demo page at `/`. If unset, the page shows a hint.   |
+| `WIDGET_PORT`         | no       | Host port for the demo nginx server (default `8080`).                      |
 
 `VITE_*` variables are exposed by Vite to the app and inlined at build time, so
 changing `VITE_WIDGET_API_URL` requires a rebuild.
